@@ -25,14 +25,31 @@ const main = (function () {
     const homeContent = document.querySelector(".home-content");
     const nextPageContent = document.querySelector(".next-page-content");
 
+    const submitCard = document.querySelector(".submit-card");
+    const title = document.querySelector(".title");
+    const subtitle = document.querySelector(".sub-title");
+    const submitBtn = document.querySelector(".submit-btn");
+
     const homeTask = new Task();
-    let homeTaksID = 0;
 
     const nextTask = new Task();
-    let nextTaskId = 0;
+
+    const arrayPrototype = (title, subtitle) => {
+        homeTask.addTask({ title, subtitle });
+        return homeTask.getTask();
+    };
+
+    // arrayPrototype("Davinci", "A noval");
+    // arrayPrototype("Sapiens", "A BestSeller");
+    // arrayPrototype("Not giving a fuck", "An Approach");
+
+    // arrayPrototype("Educated", "A Memoir");
+
+    console.log(homeTask.getTask());
 
     nextPage.classList.add("hidden");
 
+    // home link
     homeLink.addEventListener("click", (e) => {
         e.preventDefault();
 
@@ -42,6 +59,7 @@ const main = (function () {
         }
     });
 
+    // next page link
     nextPageLink.addEventListener("click", (e) => {
         e.preventDefault();
 
@@ -68,9 +86,11 @@ const main = (function () {
 
     function addToTaskFunction(content, title, subtitle) {
         if (content.classList.contains("home-content")) {
-            homeTask.addTask({ title, subtitle });
+            homeTask.addTask({ title, subtitle, id });
+            console.log(homeTask.getTask());
         } else if (content.classList.contains("next-page-content")) {
-            nextTask.addTask({ title, subtitle });
+            nextTask.addTask({ title, subtitle, id });
+            console.log(nextTask.getTask());
         }
     }
 
@@ -101,13 +121,36 @@ const main = (function () {
         cardDiv.appendChild(deleteBtn);
         content.appendChild(cardDiv);
 
-        addToTaskFunction(content, title, subtitle);
+        // addToTaskFunction(content, title, subtitle);
         // loopingthroughtTask(content);
 
         deleteBtnFunction(deleteBtn, content);
     }
 
-    card(homeContent, "The Great Gatsby", "The Great American");
+    // submit button
+
+    submitBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const target = e.target;
+        if (title.value === "" || subtitle.value === "") {
+            return;
+        }
+
+        if (!home.classList.contains("hidden")) {
+            addToTaskFunction(homeContent, title.value, subtitle.value);
+            card(homeContent, title.value, subtitle.value);
+        } else if (!nextPage.classList.contains("hidden")) {
+            addToTaskFunction(nextPageContent, title.value, subtitle.value);
+            loopingthroughtTask(nextPageContent);
+            // card(nextPageContent, title.value, subtitle.value);
+        }
+
+        title.value = "";
+        subtitle.value = "";
+    });
+
+    // card(homeContent, "The Great Gatsby", "The Great American");
+    // card(nextPageContent, "The Great Gatsby", "The Great American");
 
     // card(homeContent, "The Great Gatsby", "The Great American");
 
@@ -117,11 +160,19 @@ const main = (function () {
 
         if (content.classList.contains("home-content")) {
             for (let i = 0; i < homeArray.length; i++) {
+                homeArray[i].id = i;
                 console.log(homeArray[i]);
+                card(homeContent, homeArray[i].title, homeArray[i].subtitle);
             }
         } else if (content.classList.contains("next-page-content")) {
             for (let i = 0; i < nextArray.length; i++) {
-                console.log(nextArrayArray[i]);
+                nextArray[i].id = i;
+                console.log(nextArray[i]);
+                card(
+                    nextPageContent,
+                    nextArray[i].title,
+                    nextArray[i].subtitle
+                );
             }
         }
     }
