@@ -69,34 +69,57 @@ const main = (function () {
         }
     });
 
+    function updateStorageArray(array) {
+        for (let i = 0; i < array.length; i++) {
+            array[i].id = i;
+        }
+        console.log(array);
+    }
+
     function deleteBtnFunction(deleteBtn, content) {
         const parentDiv = deleteBtn.parentElement;
+        const homeArray = homeTask.getTask();
+        const nextArray = nextTask.getTask();
 
         deleteBtn.addEventListener("click", (e) => {
             e.preventDefault();
             parentDiv.remove();
+            const dataNumber = Number(parentDiv.dataset.number);
 
+            console.log(dataNumber);
             if (content.classList.contains("home-content")) {
+                // update array and ui elements for home content
+
+                homeTask.deleteTask(dataNumber);
                 console.log(homeTask.getTask());
+                updateStorageArray(homeArray);
+                homeContent.textContent = "";
+                loopingthroughtTask(homeContent);
             } else if (content.classList.contains("next-page-content")) {
+                // update array and ui elements for next content
+
+                nextTask.deleteTask(dataNumber);
                 console.log(nextTask.getTask());
+                updateStorageArray(nextArray);
+                nextPageContent.textContent = "";
+                loopingthroughtTask(nextPageContent);
             }
         });
     }
 
     function addToTaskFunction(content, title, subtitle) {
         if (content.classList.contains("home-content")) {
-            homeTask.addTask({ title, subtitle, id });
+            homeTask.addTask({ title, subtitle });
             console.log(homeTask.getTask());
         } else if (content.classList.contains("next-page-content")) {
-            nextTask.addTask({ title, subtitle, id });
+            nextTask.addTask({ title, subtitle });
             console.log(nextTask.getTask());
         }
     }
 
     function editBtnFunction() {}
 
-    function card(content, title = "Book", subtitle = "About book") {
+    function card(content, title = "Book", subtitle = "About book", id) {
         const cardDiv = document.createElement("div");
 
         const titleh2 = document.createElement("h2");
@@ -105,6 +128,7 @@ const main = (function () {
         const deleteBtn = document.createElement("button");
 
         cardDiv.setAttribute("class", "card");
+        cardDiv.setAttribute("data-number", `${id}`);
         titleh2.setAttribute("class", "title");
         subTitleh3.setAttribute("class", "sub-title");
         editBtn.setAttribute("class", "edit-btn");
@@ -137,9 +161,14 @@ const main = (function () {
         }
 
         if (!home.classList.contains("hidden")) {
+            homeContent.textContent = "";
+
             addToTaskFunction(homeContent, title.value, subtitle.value);
-            card(homeContent, title.value, subtitle.value);
+            loopingthroughtTask(homeContent);
+            // card(homeContent, title.value, subtitle.value);
         } else if (!nextPage.classList.contains("hidden")) {
+            nextPageContent.textContent = "";
+
             addToTaskFunction(nextPageContent, title.value, subtitle.value);
             loopingthroughtTask(nextPageContent);
             // card(nextPageContent, title.value, subtitle.value);
@@ -158,11 +187,13 @@ const main = (function () {
         const homeArray = homeTask.getTask();
         const nextArray = nextTask.getTask();
 
+        console.log(homeArray, nextArray);
+
         if (content.classList.contains("home-content")) {
             for (let i = 0; i < homeArray.length; i++) {
                 homeArray[i].id = i;
                 console.log(homeArray[i]);
-                card(homeContent, homeArray[i].title, homeArray[i].subtitle);
+                card(homeContent, homeArray[i].title, homeArray[i].subtitle, i);
             }
         } else if (content.classList.contains("next-page-content")) {
             for (let i = 0; i < nextArray.length; i++) {
@@ -171,7 +202,8 @@ const main = (function () {
                 card(
                     nextPageContent,
                     nextArray[i].title,
-                    nextArray[i].subtitle
+                    nextArray[i].subtitle,
+                    i
                 );
             }
         }
