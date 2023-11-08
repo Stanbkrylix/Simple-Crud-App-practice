@@ -25,10 +25,21 @@ const main = (function () {
     const homeContent = document.querySelector(".home-content");
     const nextPageContent = document.querySelector(".next-page-content");
 
+    // card elements
     const submitCard = document.querySelector(".submit-card");
     const title = document.querySelector(".title");
     const subtitle = document.querySelector(".sub-title");
     const submitBtn = document.querySelector(".submit-btn");
+
+    // modal content
+    const modalDiv = document.querySelector(".modal-div");
+    const modalContent = document.querySelector(".modal-content");
+    const modalTitle = document.querySelector(".modal-title");
+    const modalSubTitle = document.querySelector(".modal-sub-title");
+
+    // modal btns
+    const modalCancelBtn = document.querySelector(".cancel-btn");
+    const modalConfirmBtn = document.querySelector(".confirm-btn");
 
     const homeTask = new Task();
 
@@ -38,12 +49,6 @@ const main = (function () {
         homeTask.addTask({ title, subtitle });
         return homeTask.getTask();
     };
-
-    // arrayPrototype("Davinci", "A noval");
-    // arrayPrototype("Sapiens", "A BestSeller");
-    // arrayPrototype("Not giving a fuck", "An Approach");
-
-    // arrayPrototype("Educated", "A Memoir");
 
     console.log(homeTask.getTask());
 
@@ -107,6 +112,45 @@ const main = (function () {
         });
     }
 
+    modalDiv.classList.add("hidden");
+
+    function editBtnFunction(content, editButton, titleh2, subTitleh3) {
+        const parentDiv = editButton.parentElement;
+        const titleh2Parent = titleh2.parentElement;
+
+        const homeArray = homeTask.getTask();
+        const nextArray = nextTask.getTask();
+
+        //
+        editButton.addEventListener("click", (e) => {
+            modalDiv.classList.remove("hidden");
+            const dataNumber = Number(parentDiv.dataset.number);
+        });
+
+        modalCancelBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            console.log(titleh2Parent);
+            console.log(e.target);
+            modalDiv.classList.add("hidden");
+            modalSubTitle.value = "";
+            modalTitle.value = "";
+        });
+
+        modalConfirmBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            modalDiv.classList.add("hidden");
+            const dataNumber = Number(parentDiv.dataset.number);
+            console.log(dataNumber);
+
+            modalSubTitle.value = "";
+            modalTitle.value = "";
+        });
+    }
+
+    function modalButtonsFunction() {}
+
+    modalButtonsFunction();
+
     function addToTaskFunction(content, title, subtitle) {
         if (content.classList.contains("home-content")) {
             homeTask.addTask({ title, subtitle });
@@ -116,8 +160,6 @@ const main = (function () {
             console.log(nextTask.getTask());
         }
     }
-
-    function editBtnFunction() {}
 
     function card(content, title = "Book", subtitle = "About book", id) {
         const cardDiv = document.createElement("div");
@@ -148,6 +190,7 @@ const main = (function () {
         // addToTaskFunction(content, title, subtitle);
         // loopingthroughtTask(content);
 
+        editBtnFunction(content, editBtn, titleh2, subTitleh3);
         deleteBtnFunction(deleteBtn, content);
     }
 
@@ -177,11 +220,6 @@ const main = (function () {
         title.value = "";
         subtitle.value = "";
     });
-
-    // card(homeContent, "The Great Gatsby", "The Great American");
-    // card(nextPageContent, "The Great Gatsby", "The Great American");
-
-    // card(homeContent, "The Great Gatsby", "The Great American");
 
     function loopingthroughtTask(content) {
         const homeArray = homeTask.getTask();
