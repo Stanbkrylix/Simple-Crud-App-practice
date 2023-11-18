@@ -49,6 +49,12 @@ const main = (function () {
 
     const nextTask = new Task();
 
+    const homeArray = homeTask.getTask();
+    const nextArray = nextTask.getTask();
+
+    // const deleteBtn = document.querySelectorAll(".delete-btn");
+    // const editBtn = document.querySelectorAll(".edit-btn");
+
     nextPage.classList.add("hidden");
 
     // home link
@@ -71,9 +77,16 @@ const main = (function () {
         }
     });
 
+    function side() {
+        console.log("link side clicked");
+    }
+
+    //
+
     modalDiv.classList.add("hidden");
 
     function createCard(container, array) {
+        //
         container.innerHTML = "";
         array.map((value, index) => {
             return (container.innerHTML += `
@@ -86,7 +99,7 @@ const main = (function () {
                     edit
                 </span>
             </button>
-            <button class="delete-btn">
+            <button  class="delete-btn">
                 <span class="material-symbols-outlined">
                     delete
                 </span>
@@ -96,11 +109,11 @@ const main = (function () {
         `);
         });
 
-        // Delete button functionality
-        const deleteBtn = container.querySelectorAll(".delete-btn");
+        const deleteBtn = document.querySelectorAll(".delete-btn");
 
         deleteBtn.forEach((btn, index) => {
             //
+            console.log("delete");
             btn.addEventListener("click", (e) => {
                 e.preventDefault();
 
@@ -142,10 +155,29 @@ const main = (function () {
 
                     //  save the index of the selected card for updating later
                     modalConfirmBtn.dataset.index = index;
+
+                    // console.log(array);
                 }
             });
         });
 
+        modalCancelBtn.addEventListener("click", (e) => {
+            modalDiv.classList.add("hidden");
+            modalTitle.value = "";
+            modalSubTitle.value = "";
+        });
+    }
+    const resetValue = () => {
+        title.value = "";
+        subtitle.value = "";
+    };
+
+    // submit button
+
+    let arrayPrototype1 = [];
+    let arrayPrototype2 = [];
+
+    function modalConfirm(container, array) {
         modalConfirmBtn.addEventListener("click", (e) => {
             e.preventDefault();
 
@@ -156,29 +188,14 @@ const main = (function () {
             array[selectedIndex].title = modalTitle.value;
             array[selectedIndex].subtitle = modalSubTitle.value;
 
-            console.log(array);
-
             // render the updated card
+            // console.log(array, i++);
             createCard(container, array);
 
             modalDiv.classList.add("hidden");
-        });
-
-        modalCancelBtn.addEventListener("click", (e) => {
-            modalDiv.classList.add("hidden");
-            modalTitle.value = "";
-            modalSubTitle.value = "";
+            //
         });
     }
-
-    const resetValue = () => {
-        title.value = "";
-        subtitle.value = "";
-    };
-
-    // submit button
-    const homeArray = homeTask.getTask();
-    const nextArray = nextTask.getTask();
 
     submitBtn.addEventListener("click", (e) => {
         e.preventDefault();
@@ -188,16 +205,25 @@ const main = (function () {
         }
 
         if (!home.classList.contains("hidden")) {
-            // home content section
             homeContent.textContent = "";
-            homeArray.push({ title: title.value, subtitle: subtitle.value });
-            createCard(homeContent, homeTask.getTask());
-            console.log(homeArray);
-        } else if (!nextPage.classList.contains("hidden")) {
+            arrayPrototype1.push({
+                title: title.value,
+                subtitle: subtitle.value,
+            });
+            createCard(homeContent, arrayPrototype1);
+            modalConfirm(homeContent, arrayPrototype1);
+            console.log("home");
+        }
+
+        if (!nextPage.classList.contains("hidden")) {
             nextPageContent.textContent = "";
-            nextArray.push({ title: title.value, subtitle: subtitle.value });
-            createCard(nextPageContent, nextTask.getTask());
-            console.log(nextArray);
+            arrayPrototype2.push({
+                title: title.value,
+                subtitle: subtitle.value,
+            });
+            createCard(nextPageContent, arrayPrototype2);
+            modalConfirm(nextPageContent, arrayPrototype2);
+            console.log("nextPage");
         }
 
         resetValue();
